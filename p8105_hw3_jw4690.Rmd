@@ -1,0 +1,9 @@
+---
+title: "p8105_hw3_jw4690"
+author: "Jingxi Wang"
+date: "2024-10-10"
+output: github_document
+---
+
+
+
