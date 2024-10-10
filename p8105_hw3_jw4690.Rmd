@@ -4,10 +4,25 @@ author: "Jingxi Wang"
 date: "2024-10-10"
 output: github_document
 ---
+```{r setup, echo = FALSE, message = FALSE}
+library(tidyverse)
+```
+
 
 ```{r}
 library(p8105.datasets)
 data("ny_noaa")
 ```
 
+```{r}
+ny_noaa_df = ny_noaa |>
+  filter(!is.na(date),
+         !is.na(tmax),
+         !is.na(tmin)) |>
+  mutate(year = year(date),
+         month = month(date),
+         day = day(date)) |>
+  mutate(tmin = as.numeric(tmin) / 10,
+         tmax = as.numeric(tmax) / 10)
+```
 
