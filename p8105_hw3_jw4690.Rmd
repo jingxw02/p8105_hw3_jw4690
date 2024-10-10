@@ -5,5 +5,9 @@ date: "2024-10-10"
 output: github_document
 ---
 
+```{r}
+library(p8105.datasets)
+data("ny_noaa")
+```
 
 
