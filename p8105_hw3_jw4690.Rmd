@@ -26,3 +26,15 @@ ny_noaa_df = ny_noaa |>
          tmax = as.numeric(tmax) / 10)
 ```
 
+
+```{r}
+# find the most commonly observed values for snowfall
+
+snowfall_counts = ny_noaa_df |>
+  count(snow, name = "n_obs")
+
+common_snowfall = snowfall_counts |>
+  filter(n_obs == max(n_obs))
+```
+
+The most commonly observed values for snowfall is `r common_snowfall$snow`. I think it's because snowfall only occurs during certain month, while for much of the year, no snow is recorded, and even during winter month, many days may still have no snowfall.
