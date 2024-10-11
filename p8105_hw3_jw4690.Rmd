@@ -6,8 +6,10 @@ output: github_document
 ---
 ```{r setup, echo = FALSE, message = FALSE}
 library(tidyverse)
+library(patchwork)
 ```
 
+## Problem 1
 
 ```{r}
 library(p8105.datasets)
@@ -38,3 +40,40 @@ common_snowfall = snowfall_counts |>
 ```
 
 The most commonly observed values for snowfall is `r common_snowfall$snow`. I think it's because snowfall only occurs during certain month, while for much of the year, no snow is recorded, and even during winter month, many days may still have no snowfall.
+
+```{r}
+avg_max_Jan = ny_noaa_df|>
+  group_by(year) |>
+  filter(month == 1) |>
+  summarize(
+    mean_tmax = mean(tmax, na.rm = TRUE))
+
+Jan_plot = avg_max_Jan |>
+  ggplot(aes(x = year, y = mean_tmax)) +
+  geom_point(alpha = .5) +
+  labs(title = "Average max temperature in January", y = "Average max temperature(°C)")
+  theme(legend.position = "none")
+```
+
+```{r}
+avg_max_July = ny_noaa_df|>
+  group_by(year) |>
+  filter(month == 7) |>
+  summarize(
+    mean_tmax = mean(tmax, na.rm = TRUE))
+
+July_plot = avg_max_July |>
+  ggplot(aes(x = year, y = mean_tmax)) +
+  geom_point(alpha = .5) +
+  labs(title = "Average max temperature in July", y = "Average max temperature(°C)")
+  theme(legend.position = "none")
+```
+
+```{r}
+Jan_plot + July_plot
+```
+
+In January, temperatures are typically lower, reflecting the winter season. The temperature distribution tends to be centered around 0°C. 
+In July, temperatures tend to be higher due to the summer season. There are some instances of extremely low temperatures in July, which are considered outliers.
+
+
