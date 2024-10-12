@@ -76,4 +76,24 @@ Jan_plot + July_plot
 In January, temperatures are typically lower, reflecting the winter season. The temperature distribution tends to be centered around 0°C. 
 In July, temperatures tend to be higher due to the summer season. There are some instances of extremely low temperatures in July, which are considered outliers.
 
+```{r}
+tmax_tmin = ny_noaa_df |>
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_hex(bins = 50) +
+  labs(title = "tmax vs tmin", x = "min temperature(°C)", y = "max temperature°C")
+```
+
+```{r}
+snowfall_df = ny_noaa_df |>
+  filter(snow > 0 & snow < 100)
+
+snowfall_plot = snowfall_df |>
+  ggplot(aes(x = snow, fill = factor(year))) +
+  geom_density(alpha = .3) +
+  labs(title = "Distribution of snowfall by year", x = "snowfall")
+```
+
+```{r}
+tmax_tmin / snowfall_plot
+```
 
