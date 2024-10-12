@@ -28,6 +28,7 @@ ny_noaa_df = ny_noaa |>
          tmax = as.numeric(tmax) / 10)
 ```
 
+This dataset has 7 variables and 2595176 observations. The key variables include date, sonwfall, prcp, max temperature, and min temperature.
 
 ```{r}
 # find the most commonly observed values for snowfall
@@ -96,4 +97,7 @@ snowfall_plot = snowfall_df |>
 ```{r}
 tmax_tmin / snowfall_plot
 ```
+
+The first panel uses a hexbin plot to represent the relationship between tmax and tmin, which helps visualize the density of temperature observations.
+The second panel shows the distribution of snowfall (between 0 and 100 mm) separately for each year, highlighting seasonal patterns or anomalies in snowfall over time.
 
