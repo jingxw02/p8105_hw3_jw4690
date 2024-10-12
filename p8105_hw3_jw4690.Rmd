@@ -163,7 +163,28 @@ total_activity_plot
 
 This plot shows how total physical activity varies by age for both men and women, with separate panels for each education level. The trend lines help illustrate potential differences between genders across different age groups and education levels. The smooth lines highlight these trends, making it easier to compare overall patterns. We can observe that the activity levels decrease with age, and there could be noticeable differences in activity between men and women, as well as between educational groups.
 
+```{r}
+minute_cols = merged_df |>
+  select(starts_with("min"))
 
+Accelerometer_df = merged_df |>
+  select(SEQN, sex, education, everything()) |>
+  pivot_longer(cols = starts_with("min"), names_to = "minute", values_to = "activity") |>
+  mutate(minute = as.numeric(sub("min", "", minute)))
 
+Accelerometer_plot = Accelerometer_df |>
+  ggplot(aes(x = minute, y = activity, color = sex)) +
+  geom_line(aes(group = SEQN), alpha = 0.3) +
+  geom_smooth(se = FALSE) +
+  facet_wrap(. ~ education) +
+  labs(title = "24-Hour Activity Time Course by Education Level",
+       x = "Minute of the Day",
+       y = "Activity (MIMS)",
+       color = "Sex")
+
+Accelerometer_plot
+```
+
+The plot shows how activity levels fluctuate over the course of the day, broken down by education level, and will use different colors to represent the sex of the participants. Across all education levels, activity tends to increase during daylight hours, with notable peaks during the morning and afternoon, followed by a decline during the night.
 
 
