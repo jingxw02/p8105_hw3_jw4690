@@ -101,3 +101,26 @@ tmax_tmin / snowfall_plot
 The first panel uses a hexbin plot to represent the relationship between tmax and tmin, which helps visualize the density of temperature observations.
 The second panel shows the distribution of snowfall (between 0 and 100 mm) separately for each year, highlighting seasonal patterns or anomalies in snowfall over time.
 
+## Problem 2
+
+```{r}
+accel_df = read_csv("./data/nhanes_accel.csv")
+
+covar_df = read_csv("./data/nhanes_covar.csv", skip = 4)
+
+covar_df = covar_df |>
+  mutate(
+    SEQN = as.integer(SEQN),
+    sex = factor(sex, levels = c(1, 2), labels = c("Male", "Female")),
+    age = as.integer(age),
+    BMI = as.numeric(BMI),
+    education = factor(education, levels = c(1, 2, 3), 
+                       labels = c("Less than high school", "High school equivalent", 
+                                  "More than high school"))
+  ) |>
+  filter(age >= 21)
+
+merged_df = inner_join(accel_df, covar_df, by = "SEQN") |>
+  drop_na(sex, age, BMI, education)
+```
+
