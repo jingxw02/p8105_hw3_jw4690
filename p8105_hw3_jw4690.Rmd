@@ -132,18 +132,36 @@ education_sex_table = merged_df |>
 
 education_sex_plot = ggplot(merged_df, aes(x = age, fill = sex)) +
   geom_histogram(binwidth = 5, position = "dodge") +
-  facet_wrap(~education) +
+  facet_wrap(. ~ education) +
   labs(title = "Age Distribution by Sex and Education Level",
        x = "Age",
        y = "Count",
        fill = "Sex")
+
+education_sex_plot
 ```
 
 The table shows the number of men and women in each education category, making it easy to compare gender distribution across different educational levels.
 
 The plot visualizes the age distribution for men and women within each education category. It can show how age ranges might differ between genders in the same education level, or how education is distributed across age groups.
 
+```{r}
+merged_df$total_activity <- rowSums(merged_df[, 2:1441])
 
+total_activity_plot = merged_df |>
+  ggplot(aes(x = age, y = total_activity, color = sex)) +
+  geom_point(alpha = .5) +
+  geom_smooth(se = FALSE) +
+  facet_wrap(. ~ education) +
+  labs(title = "Total Activity vs Age by Sex and Education Level",
+       x = "Age",
+       y = "Total Activity",
+       color = "Sex")
+
+total_activity_plot
+```
+
+This plot shows how total physical activity varies by age for both men and women, with separate panels for each education level. The trend lines help illustrate potential differences between genders across different age groups and education levels. The smooth lines highlight these trends, making it easier to compare overall patterns. We can observe that the activity levels decrease with age, and there could be noticeable differences in activity between men and women, as well as between educational groups.
 
 
 
