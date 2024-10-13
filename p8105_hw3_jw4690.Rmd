@@ -130,6 +130,8 @@ education_sex_table = merged_df |>
   summarize(count = n(), .groups = "drop") |>
   arrange(education)
 
+education_sex_table
+
 education_sex_plot = ggplot(merged_df, aes(x = age, fill = sex)) +
   geom_histogram(binwidth = 5, position = "dodge") +
   facet_wrap(. ~ education) +
@@ -206,4 +208,15 @@ combined_df= bind_rows(Jan_2020, Jan_2024, July_2020, July_2024)
 ```
 
 The final combines information from January 2020, January 2024, July 2020, and July 2024. Each record represents a ride in the Citi Bike system, capturing details such as ride duration, the type of bike used, the stations involved, and the user's membership status.
+
+```{r}
+summary_table = combined_df |>
+  group_by(year, month, member_casual) |>
+  summarize(total_rides = n()) |>
+  arrange(year, month, member_casual)
+
+summary_table
+```
+
+There is a increase in the number of rides between 2020 and 2024, both for casual riders and Citi Bike members. The number of casual rides in July is much higher compared to January in both years, likely due to the favorable weather during summer.
 
