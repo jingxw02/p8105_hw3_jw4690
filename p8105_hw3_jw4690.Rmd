@@ -187,4 +187,23 @@ Accelerometer_plot
 
 The plot shows how activity levels fluctuate over the course of the day, broken down by education level, and will use different colors to represent the sex of the participants. Across all education levels, activity tends to increase during daylight hours, with notable peaks during the morning and afternoon, followed by a decline during the night.
 
+## Problem 3
+
+```{r}
+Jan_2020 = read_csv("./data/citibike/Jan 2020 Citi.csv/Jan 2020 Citi.csv") |>
+  mutate(year = 2020, month = "January")
+
+Jan_2024 = read_csv("./data/citibike/Jan 2024 Citi.csv/Jan 2024 Citi.csv") |>
+  mutate(year = 2024, month = "January")
+
+July_2020 = read_csv("./data/citibike/July 2020 Citi.csv/July 2020 Citi.csv") |>
+  mutate(year = 2020, month = "July")
+
+July_2024 = read_csv("./data/citibike/July 2024 Citi.csv/July 2024 Citi.csv") |>
+  mutate(year = 2020, month = "July")
+
+combined_df= bind_rows(Jan_2020, Jan_2024, July_2020, July_2024)
+```
+
+The final combines information from January 2020, January 2024, July 2020, and July 2024. Each record represents a ride in the Citi Bike system, capturing details such as ride duration, the type of bike used, the stations involved, and the user's membership status.
 
