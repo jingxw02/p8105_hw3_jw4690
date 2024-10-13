@@ -202,7 +202,7 @@ July_2020 = read_csv("./data/citibike/July 2020 Citi.csv/July 2020 Citi.csv") |>
   mutate(year = 2020, month = "July")
 
 July_2024 = read_csv("./data/citibike/July 2024 Citi.csv/July 2024 Citi.csv") |>
-  mutate(year = 2020, month = "July")
+  mutate(year = 2024, month = "July")
 
 combined_df= bind_rows(Jan_2020, Jan_2024, July_2020, July_2024)
 ```
@@ -231,4 +231,23 @@ top_starting_stations
 ```
 
 The 5 most popular starting stations in July 2024 are: Pier 61 at Chelsea Piers, University Pl & E 14 St, W 21 St & 6 Ave, West St & Chambers St, and W 31 St & 7 Ave.
+
+```{r}
+median_duration_df = combined_df |>
+  group_by(year, month, weekdays) |>
+  summarize(median_duration = median(duration, na.rm = TRUE))
+
+median_duration_plot = median_duration_df |>
+  ggplot(aes(x = weekdays, y = median_duration, color = month)) +
+  geom_line(aes(group = interaction(year, month))) +
+  facet_wrap(. ~ year) + 
+  labs(title = "Median Ride Duration by Day of the Week, Month, and Year",
+       x = "Day of the Week",
+       y = "Median Ride Duration (minutes)",
+       color = "Month")
+
+median_duration_plot
+```
+
+The plot shows patterns in ride duration across different days of the week, with longer rides generally observed on weekends. Additionally, ride durations tend to be higher in warmer months like July compared to January. Comparing 2020 and 2024, there are some shifts in ride duration trends.
 
