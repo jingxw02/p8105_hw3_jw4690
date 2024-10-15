@@ -90,6 +90,8 @@ The second panel shows the distribution of snowfall (between 0 and 100 mm) separ
 ## Problem 2
 
 ```{r}
+# Load, tidy, merge, and otherwise organize the data sets
+
 accel_df = read_csv("./data/nhanes_accel.csv")
 
 covar_df = read_csv("./data/nhanes_covar.csv", skip = 4)
@@ -111,12 +113,21 @@ merged_df = inner_join(accel_df, covar_df, by = "SEQN") |>
 ```
 
 ```{r}
+# reader-friendly table for the number of men and women in each education category
+
 education_sex_table = merged_df |>
    group_by(education, sex) |>
-  summarize(count = n(), .groups = "drop") |>
-  arrange(education)
+  summarize(count = n()) |>
+  pivot_wider(names_from = sex,
+              values_from = count) |>
+  rename("Education Category" = education)
 
-education_sex_table
+education_sex_table |> 
+  knitr::kable(caption = "Sex and Education Category")
+```
+
+```{r}
+# visualization of the age distributions for men and women in each education category
 
 education_sex_plot = ggplot(merged_df, aes(x = age, fill = sex)) +
   geom_histogram(binwidth = 5, position = "dodge") +
