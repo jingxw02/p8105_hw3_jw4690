@@ -245,9 +245,12 @@ top_starting_stations |>
 The 5 most popular starting stations in July 2024 are: Pier 61 at Chelsea Piers, University Pl & E 14 St, W 21 St & 6 Ave, West St & Chambers St, and W 31 St & 7 Ave.
 
 ```{r}
+# Make a plot to investigate the effects of day of the week, month, and year on median ride duration
+
 median_duration_df = combined_df |>
   group_by(year, month, weekdays) |>
-  summarize(median_duration = median(duration, na.rm = TRUE))
+  summarize(median_duration = median(duration, na.rm = TRUE)) |>
+  mutate(weekdays = factor(weekdays, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))
 
 median_duration_plot = median_duration_df |>
   ggplot(aes(x = weekdays, y = median_duration, color = month)) +
@@ -256,12 +259,13 @@ median_duration_plot = median_duration_df |>
   labs(title = "Median Ride Duration by Day of the Week, Month, and Year",
        x = "Day of the Week",
        y = "Median Ride Duration (minutes)",
-       color = "Month")
+       color = "Month") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 median_duration_plot
 ```
 
-The plot shows patterns in ride duration across different days of the week, with longer rides generally observed on weekends. Additionally, ride durations tend to be higher in warmer months like July compared to January. Comparing 2020 and 2024, there are some shifts in ride duration trends.
+This plot shows that July has consistently longer median ride durations compared to January in both 2020 and 2024, indicating a seasonal effect. In July, rides peak on Saturdays, especially in 2020, while January has more stable and shorter ride durations throughout the week. Overall, summer months (July) see more variability and longer rides, particularly on weekends, whereas winter months (January) show little variation in ride duration across the week.
 
 ```{r}
 df_2024 = combined_df |>
