@@ -145,6 +145,8 @@ The table shows the number of men and women in each education category, making i
 The plot visualizes the age distribution for men and women within each education category. It can show how age ranges might differ between genders in the same education level, or how education is distributed across age groups. For those with "Less than high school," the age distribution appears fairly evenly spread across different age groups, with no clear peak for either males or females. In the "High school equivalent" group, the age distribution is somewhat more scattered, but still fairly balanced between the sexes, without a clear age range standing out. The "More than high school" group shows a larger count of people in the 30-50 age range, especially among males. 
 
 ```{r}
+# plot  total activity over the day
+
 merged_df$total_activity <- rowSums(merged_df[, 2:1441])
 
 total_activity_plot = merged_df |>
@@ -160,9 +162,11 @@ total_activity_plot = merged_df |>
 total_activity_plot
 ```
 
-This plot shows how total physical activity varies by age for both men and women, with separate panels for each education level. The trend lines help illustrate potential differences between genders across different age groups and education levels. The smooth lines highlight these trends, making it easier to compare overall patterns. We can observe that the activity levels decrease with age, and there could be noticeable differences in activity between men and women, as well as between educational groups.
+In the "Less than high school" group, activity drops significantly after age 60 for both sexes. The "High school equivalent" group shows more fluctuation, with activity peaking around ages 40–50 and declining afterward, while females maintain slightly higher activity in older ages. In the "More than high school" group, both sexes show more stable activity levels, with females maintaining steady activity longer than males. Higher education seems to be linked with a more gradual decline in activity, especially for women.
 
 ```{r}
+# Make a three-panel plot that shows the 24-hour activity time courses for each education level 
+
 minute_cols = merged_df |>
   select(starts_with("min"))
 
@@ -178,13 +182,14 @@ Accelerometer_plot = Accelerometer_df |>
   facet_wrap(. ~ education) +
   labs(title = "24-Hour Activity Time Course by Education Level",
        x = "Minute of the Day",
-       y = "Activity (MIMS)",
-       color = "Sex")
+       y = "Activity",
+       color = "Sex") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 Accelerometer_plot
 ```
 
-The plot shows how activity levels fluctuate over the course of the day, broken down by education level, and will use different colors to represent the sex of the participants. Across all education levels, activity tends to increase during daylight hours, with notable peaks during the morning and afternoon, followed by a decline during the night.
+This chart shows daily activity patterns over a 24-hour period for males and females across three education levels. In all categories, activity rises sharply in the morning, peaks, and then gradually declines throughout the day, with smaller activity spikes toward the evening. The activity trends for both males and females are similar, though females tend to have slightly more consistent activity levels across the day. There are no significant differences between education levels, though the "More than high school" group shows slightly higher peaks of activity during the day.
 
 ## Problem 3
 
