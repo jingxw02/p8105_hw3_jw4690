@@ -7,6 +7,7 @@ output: github_document
 ```{r setup, echo = FALSE, message = FALSE}
 library(tidyverse)
 library(patchwork)
+library(ggridges)
 ```
 
 ## Problem 1
@@ -25,7 +26,8 @@ ny_noaa_df = ny_noaa |>
          month = month(date),
          day = day(date)) |>
   mutate(tmin = as.numeric(tmin) / 10,
-         tmax = as.numeric(tmax) / 10)
+         tmax = as.numeric(tmax) / 10,
+         prcp = as.numeric(prcp) / 10)
 ```
 
 This dataset has 7 variables and 2595176 observations. The key variables include date, sonwfall, prcp, max temperature, and min temperature.
@@ -34,50 +36,34 @@ This dataset has 7 variables and 2595176 observations. The key variables include
 # find the most commonly observed values for snowfall
 
 snowfall_counts = ny_noaa_df |>
-  count(snow, name = "n_obs")
+  filter(!is.na(snow)) |>
+  count(snow) |>
+  arrange(desc(n))
 
-common_snowfall = snowfall_counts |>
-  filter(n_obs == max(n_obs))
+snowfall_counts
 ```
 
-The most commonly observed values for snowfall is `r common_snowfall$snow`. I think it's because snowfall only occurs during certain month, while for much of the year, no snow is recorded, and even during winter month, many days may still have no snowfall.
+The most commonly observed values for snowfall is 0 mm. I think it's because snowfall only occurs during certain month, while for much of the year, no snow is recorded. 25mm, 13mm, 51mm are also common values.
 
 ```{r}
-avg_max_Jan = ny_noaa_df|>
-  group_by(year) |>
-  filter(month == 1) |>
-  summarize(
-    mean_tmax = mean(tmax, na.rm = TRUE))
+# Make a two-panel plot showing the average max temperature in January and in July in each station across years.
 
-Jan_plot = avg_max_Jan |>
-  ggplot(aes(x = year, y = mean_tmax)) +
-  geom_point(alpha = .5) +
-  labs(title = "Average max temperature in January", y = "Average max temperature(°C)")
-  theme(legend.position = "none")
-```
-
-```{r}
-avg_max_July = ny_noaa_df|>
-  group_by(year) |>
-  filter(month == 7) |>
-  summarize(
-    mean_tmax = mean(tmax, na.rm = TRUE))
-
-July_plot = avg_max_July |>
-  ggplot(aes(x = year, y = mean_tmax)) +
-  geom_point(alpha = .5) +
-  labs(title = "Average max temperature in July", y = "Average max temperature(°C)")
-  theme(legend.position = "none")
-```
-
-```{r}
-Jan_plot + July_plot
+ny_noaa_df |>
+  group_by(id, year, month) |>
+  filter(month %in% c(1, 7)) |>
+  summarize(mean_tmax = mean(tmax, na.rm = TRUE, color = id)) |>
+  ggplot(aes(x = year, y = mean_tmax, group = id)) +
+  geom_point() + geom_path() +
+  facet_grid(~month) +
+  labs(title = "Mean monthly temperature for each station across years for January and July")
 ```
 
 In January, temperatures are typically lower, reflecting the winter season. The temperature distribution tends to be centered around 0°C. 
 In July, temperatures tend to be higher due to the summer season. There are some instances of extremely low temperatures in July, which are considered outliers.
 
 ```{r}
+#Make a two-panel plot showing (i) tmax vs tmin; and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
+
 tmax_tmin = ny_noaa_df |>
   ggplot(aes(x = tmin, y = tmax)) +
   geom_hex(bins = 50) +
@@ -89,13 +75,13 @@ snowfall_df = ny_noaa_df |>
   filter(snow > 0 & snow < 100)
 
 snowfall_plot = snowfall_df |>
-  ggplot(aes(x = snow, fill = factor(year))) +
-  geom_density(alpha = .3) +
+  ggplot(aes(x = snow, y = as.factor(year))) +
+  geom_density_ridges() +
   labs(title = "Distribution of snowfall by year", x = "snowfall")
 ```
 
 ```{r}
-tmax_tmin / snowfall_plot
+tmax_tmin + snowfall_plot
 ```
 
 The first panel uses a hexbin plot to represent the relationship between tmax and tmin, which helps visualize the density of temperature observations.
